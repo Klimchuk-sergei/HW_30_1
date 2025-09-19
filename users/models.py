@@ -29,6 +29,15 @@ class User(AbstractUser):
 
     REQUIRED_FIELDS = []
 
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="date created",
+    )
+
+    def __str__(self):
+        return self.email
+
+
 class Meta:
     verbose_name = "user"
     verbose_name_plural = "users"
