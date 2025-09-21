@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -26,6 +28,7 @@ INSTALLED_APPS = [
     "users",
     "lesson",
     "course",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
