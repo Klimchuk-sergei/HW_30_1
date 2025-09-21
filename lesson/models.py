@@ -3,7 +3,9 @@ from course.models import Course
 
 
 class Lesson(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name="lessons", verbose_name="курс"
+    )
 
     title = models.CharField(max_length=200, verbose_name="title")
     description = models.TextField(verbose_name="description")
