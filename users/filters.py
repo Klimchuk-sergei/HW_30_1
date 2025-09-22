@@ -4,12 +4,12 @@ from .models import Payment
 
 class PaymentFilter(django_filters.FilterSet):
     paid_course = django_filters.NumberFilter(
-        field_name="course",
+        field_name="paid_course__id",
         label="Paid course",
     )
 
     paid_lesson = django_filters.NumberFilter(
-        field_name="lesson",
+        field_name="paid_lesson__id",
         label="Paid lesson",
     )
 
@@ -18,7 +18,7 @@ class PaymentFilter(django_filters.FilterSet):
             ("payment_date", "date"),
             ("-payment_date", "-date"),
         ),
-        filed_labels={
+        field_labels={
             "date": "дата опалты (по возрастанию)",
             "-date": "дата оплаты (по убыванию)",
         },
