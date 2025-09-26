@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from .models import Course
-from lesson.serializers import LessonSerializer
+from lesson.serializers import LessonShortSerializer
 
 
 class CourseSerializer(serializers.ModelSerializer):
     lessons_count = serializers.SerializerMethodField()
-    lessons = LessonSerializer(many=True, read_only=True, source="lessons")
+    lessons = LessonShortSerializer(many=True, read_only=True, source="lessons")
 
     class Meta:
         model = Course
