@@ -5,17 +5,12 @@ from django.conf import settings
 
 class Lesson(models.Model):
     course = models.ForeignKey(
-        Course, on_delete=models.CASCADE,
-        related_name="lessons",
-        verbose_name="курс"
+        Course, on_delete=models.CASCADE, related_name="lessons", verbose_name="курс"
     )
     title = models.CharField(max_length=200, verbose_name="title")
     description = models.TextField(verbose_name="description")
     preview = models.ImageField(
-        upload_to="lesson_previews/",
-        blank=True,
-        null=True,
-        verbose_name="Lesson Image"
+        upload_to="lesson_previews/", blank=True, null=True, verbose_name="Lesson Image"
     )
     video_file = models.URLField(
         blank=True,
@@ -23,7 +18,9 @@ class Lesson(models.Model):
         verbose_name="Video URL",
         help_text="Enter YouTube or Vimeo video URL",
     )
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="owner")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="owner"
+    )
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="created at")
 
