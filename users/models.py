@@ -1,9 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
-from course.models import Course
-from lesson.models import Lesson
-
 NULLABLE = {"blank": True, "null": True}
 
 
@@ -99,7 +96,7 @@ class Payment(models.Model):
 
     # ссылка на оплаченый курс (может быть пустым)
     paid_course = models.ForeignKey(
-        Course,
+        'course.Course',
         on_delete=models.CASCADE,
         **NULLABLE,
         verbose_name="оплаченный курс",
@@ -107,7 +104,7 @@ class Payment(models.Model):
     )
     # Ссылка на оплаченный урок (может быть пустым)
     paid_lesson = models.ForeignKey(
-        Lesson,
+        'lesson.Lesson',
         on_delete=models.CASCADE,
         **NULLABLE,
         verbose_name="оплаченный урок",
