@@ -1,13 +1,9 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
-from course.models import Course
-from lesson.models import Lesson
-
 NULLABLE = {"blank": True, "null": True}
 
 
-# Добавляем кастомный менеджер пользователей
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -21,6 +17,13 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+
+        # Устанавливаем дефолтное значение для phone_number если не указано
+        if "phone_number" not in extra_fields or not extra_fields["phone_number"]:
+            # Генерируем уникальный phone_number для суперпользователя
+            import uuid
+
+            extra_fields["phone_number"] = f"superuser-{uuid.uuid4().hex[:10]}"
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Суперпользователь должен иметь is_staff=True")
@@ -43,6 +46,7 @@ class User(AbstractUser):
         unique=True,
         verbose_name="phone number",
         help_text="Phone number",
+        **NULLABLE,  # Делаем поле необязательным
     )
 
     city = models.CharField(
@@ -60,14 +64,13 @@ class User(AbstractUser):
         help_text="Avatar",
     )
 
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = []  # Убираем phone_number из обязательных полей
 
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name="date created",
     )
 
-    # Добавляем кастомный менеджер
     objects = UserManager()
 
     def __str__(self):
@@ -99,7 +102,7 @@ class Payment(models.Model):
 
     # ссылка на оплаченый курс (может быть пустым)
     paid_course = models.ForeignKey(
-        Course,
+        "course.Course",
         on_delete=models.CASCADE,
         **NULLABLE,
         verbose_name="оплаченный курс",
@@ -107,7 +110,7 @@ class Payment(models.Model):
     )
     # Ссылка на оплаченный урок (может быть пустым)
     paid_lesson = models.ForeignKey(
-        Lesson,
+        "lesson.Lesson",
         on_delete=models.CASCADE,
         **NULLABLE,
         verbose_name="оплаченный урок",
