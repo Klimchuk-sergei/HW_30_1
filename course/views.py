@@ -1,6 +1,8 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from config.paginators import CoursePaginator
 from .models import Course, Subscription
 from django.shortcuts import get_object_or_404
 from .serializers import CourseSerializer
@@ -12,6 +14,7 @@ from users.permissions import IsModerator, IsOwner
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    pagination_class = CoursePaginator
 
     def get_permissions(self):
         if self.action == "create":

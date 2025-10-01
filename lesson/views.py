@@ -6,6 +6,8 @@ from rest_framework.generics import (
     DestroyAPIView,
 )
 from rest_framework.permissions import IsAuthenticated
+
+from config.paginators import CoursePaginator, LessonPaginator
 from users.permissions import IsModerator, IsOwner
 from lesson.models import Lesson
 from lesson.serializers import LessonSerializer
@@ -14,6 +16,7 @@ from lesson.serializers import LessonSerializer
 class LessonListAPIView(ListAPIView):
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = LessonPaginator
 
     def get_queryset(self):
         if self.request.user.groups.filter(name="Модераторы").exists():
