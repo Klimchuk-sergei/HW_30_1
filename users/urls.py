@@ -12,8 +12,10 @@ router.register(r"users", UserViewSet, basename="user")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("login/", TokenObtainPairView.as_view(), name="login"),  # Убрали кастомный сериализатор
+    path(
+        "login/", TokenObtainPairView.as_view(), name="login"
+    ),  # Убрали кастомный сериализатор
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("register/", UserRegistrationAPIView.as_view(), name="register"),
-    path("profile/", UserViewSet.as_view({'get': 'profile'}), name="profile"),
+    path("profile/", UserViewSet.as_view({"get": "profile"}), name="profile"),
 ]
