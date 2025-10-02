@@ -30,3 +30,4 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = "Lesson"
         verbose_name_plural = "Lessons"
+        ordering = ['-id']

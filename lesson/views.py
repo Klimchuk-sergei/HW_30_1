@@ -8,7 +8,7 @@ from rest_framework.generics import (
 from rest_framework.permissions import IsAuthenticated
 
 from config.paginators import CoursePaginator, LessonPaginator
-from users.permissions import IsModerator, IsOwner
+from users.permissions import IsModerator, IsOwner, IsOwnerAndNotModerator
 from lesson.models import Lesson
 from lesson.serializers import LessonSerializer
 
@@ -50,7 +50,6 @@ class LessonUpdateAPIView(UpdateAPIView):
 
 class LessonDestroyAPIView(DestroyAPIView):
     queryset = Lesson.objects.all()
-    permission_classes = [
-        IsAuthenticated,
-        IsOwner & ~IsModerator,
-    ]  # Только владелец и не модератор
+    permission_classes = [IsOwnerAndNotModerator]  # Только владелец и не модератор
+    def get_queryset(self):
+        return Lesson.objects.filter(owner=self.request.user)

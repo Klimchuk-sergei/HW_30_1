@@ -11,16 +11,13 @@ class LessonSerializer(serializers.ModelSerializer):
     def validate_video_file(self, value):
         """валидация поля ссылки, проверяем что ссылка на youtube"""
         if value:
-            if (
-                "youtube.com" in value not in value
-                and "youtu.be" in value.url not in value
-            ):
+            if "youtube.com" not in value and "youtu.be" not in value:
                 raise serializers.ValidationError("Допустимы только youtube ссылки")
 
-        if not value.startswith(("http://", "https://")):
-            raise serializers.ValidationError(
-                "Ссылка должна начинаться с http:// или https://"
-            )
+            if not value.startswith(("http://", "https://")):
+                raise serializers.ValidationError(
+                    "Ссылка должна начинаться с http:// или https://"
+                )
 
         return value
 
