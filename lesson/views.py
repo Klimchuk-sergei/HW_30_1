@@ -6,8 +6,7 @@ from rest_framework.generics import (
     DestroyAPIView,
 )
 from rest_framework.permissions import IsAuthenticated
-
-from config.paginators import CoursePaginator, LessonPaginator
+from .paginators import LessonPaginator
 from users.permissions import IsModerator, IsOwner, IsOwnerAndNotModerator
 from lesson.models import Lesson
 from lesson.serializers import LessonSerializer
