@@ -9,9 +9,9 @@ from lesson.views import (
 
 app_name = "lesson"
 urlpatterns = [
-    path("", LessonListAPIView.as_view()),
-    path("create/", LessonCreateAPIView.as_view()),
-    path("<int:pk>/", LessonRetrieveAPIView.as_view()),
-    path("<int:pk>/update/", LessonUpdateAPIView.as_view()),
-    path("<int:pk>/delete/", LessonDestroyAPIView.as_view()),
+    path("", LessonListAPIView.as_view(), name="lesson-list"),
+    path("create/", LessonCreateAPIView.as_view(), name="lesson-create"),
+    path("<int:pk>/", LessonRetrieveAPIView.as_view(), name="lesson-detail"),
+    path("<int:pk>/update/", LessonUpdateAPIView.as_view(), name="lesson-update"),
+    path("<int:pk>/delete/", LessonDestroyAPIView.as_view(), name="lesson-delete"),
 ]
