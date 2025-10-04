@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
@@ -17,6 +18,7 @@ class LessonListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = LessonPaginator
 
+    @extend_schema(summary="Список уроков")
     def get_queryset(self):
         if self.request.user.groups.filter(name="Модераторы").exists():
             return Lesson.objects.all()
@@ -37,6 +39,7 @@ class LessonCreateAPIView(CreateAPIView):
         ~IsModerator,
     ]  # Модераторы не могут создавать
 
+    @extend_schema(summary="Создать урок")
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 

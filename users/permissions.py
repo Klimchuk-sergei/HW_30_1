@@ -39,5 +39,5 @@ class IsOwnerAndNotModerator(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         is_owner = obj.owner == request.user
-        is_moderator = request.user.groups.filter(name='Модераторы').exists()
+        is_moderator = request.user.groups.filter(name="Модераторы").exists()
         return is_owner and not is_moderator

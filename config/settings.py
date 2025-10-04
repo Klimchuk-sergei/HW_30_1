@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
@@ -29,6 +30,7 @@ INSTALLED_APPS = [
     "course",
     "django_filters",
     "rest_framework_simplejwt",
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +69,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",  # По умолчанию все эндпоинты закрыты
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 DATABASES = {
@@ -154,3 +157,52 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "LMS Platform API",
+    "DESCRIPTION": "API для системы управления обучением (LMS)",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+
+    # Автоматическая генерация тегов из URL
+    "TAGS": [
+        {"name": "courses", "description": "Операции с курсами"},
+        {"name": "lessons", "description": "Операции с уроками"},
+        {"name": "users", "description": "Операции с пользователями"},
+        {"name": "payments", "description": "Операции с платежами"},
+        {"name": "auth", "description": "Аутентификация и авторизация"},
+    ],
+
+    # Поддержка JWT
+    "SECURITY": [{"Bearer": []}],
+    "SECURITY_SCHEMES": {
+        "Bearer": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+        }
+    },
+
+    # Автоматическая сортировка операций
+    "SORT_OPERATIONS": False,
+
+    # Красивые имена в схеме
+    "COMPONENT_SPLIT_REQUEST": True,
+}
+
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY', '')

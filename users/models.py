@@ -90,6 +90,11 @@ class Payment(models.Model):
         (TRANSFER, "Transfer"),
     ]
 
+    stripe_product_id = models.CharField(max_length=100, blank=True, null=True)
+    stripe_price_id = models.CharField(max_length=100, blank=True, null=True)
+    stripe_session_id = models.CharField(max_length=100, blank=True, null=True)
+    payment_url = models.URLField(max_length=500, blank=True, null=True)
+
     # Ссылка на пользователя
     user = models.ForeignKey(
         User,
