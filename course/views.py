@@ -9,6 +9,7 @@ from .serializers import CourseSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from users.permissions import IsModerator, IsOwner
+from drf_spectacular.utils import extend_schema
 
 
 class CourseViewSet(ModelViewSet):
@@ -54,6 +55,7 @@ class SubscriptionAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(summary="Управление подпиской на курс")
     def post(self, request, *args, **kwargs):
         user = request.user
         course_id = request.data.get("course_id")
