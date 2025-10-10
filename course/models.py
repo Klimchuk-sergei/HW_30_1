@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 
 class Course(models.Model):
@@ -12,9 +13,17 @@ class Course(models.Model):
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Owner"
     )
+    # поле последнего обновления курса
+    last_updated = models.DateTimeField(default=timezone.now, verbose_name="Last Updated")
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        """ обновляем время последнего обновления при сохраненини """
+        if self.pk:
+            self.last_updated = timezone.now()
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Course"
