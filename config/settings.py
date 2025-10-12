@@ -226,11 +226,17 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CELERY_BEAT_SCHEDULE = {
-    'task-name': {
-        'task': 'myapp.tasks.my_task',  # Путь к задаче
-        'schedule': timedelta(minutes=10),  # Расписание выполнения задачи (например, каждые 10 минут)
+    'debug-task-every-10-minutes': {
+        'task': 'users.tasks.debug_task',
+        'schedule': timedelta(minutes=10),
+    },
+    'block-inactive-users-every-day': {
+        'task': 'users.tasks.block_inactive_users',
+        'schedule': timedelta(days=1),  # запускаем проверку каждый день
     },
 }
 
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@lms-platform.ru'
