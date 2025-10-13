@@ -14,13 +14,15 @@ class Course(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Owner"
     )
     # поле последнего обновления курса
-    last_updated = models.DateTimeField(default=timezone.now, verbose_name="Last Updated")
+    last_updated = models.DateTimeField(
+        default=timezone.now, verbose_name="Last Updated"
+    )
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
-        """ обновляем время последнего обновления при сохраненини """
+        """обновляем время последнего обновления при сохраненини"""
         if self.pk:
             self.last_updated = timezone.now()
         super().save(*args, **kwargs)

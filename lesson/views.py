@@ -61,5 +61,6 @@ class LessonUpdateAPIView(UpdateAPIView):
 class LessonDestroyAPIView(DestroyAPIView):
     queryset = Lesson.objects.all()
     permission_classes = [IsOwnerAndNotModerator]  # Только владелец и не модератор
+
     def get_queryset(self):
         return Lesson.objects.filter(owner=self.request.user)

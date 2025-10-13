@@ -9,9 +9,10 @@ from datetime import timedelta
 
 logger = logging.getLogger(__name__)
 
+
 @shared_task
 def send_course_update_email(course_id):
-    """ Уведомление пользователя об обновлении курса """
+    """Уведомление пользователя об обновлении курса"""
     try:
         course = Course.objects.get(id=course_id)
         subscription = Subscription.objects.filter(course=course)
@@ -45,15 +46,14 @@ def send_course_update_email(course_id):
 
 @shared_task
 def block_inactive_users():
-    """ Блокировка пользователя, который не заходил более месяца """
+    """Блокировка пользователя, который не заходил более месяца"""
     try:
         User = get_user_model()
         one_month_ago = timezone.now() - timedelta(days=30)
 
         # Находим пользователей, которые не заходили больше месяца
         inactive_users = User.objects.filter(
-            is_active=True,
-            last_login__lt=one_month_ago
+            is_active=True, last_login__lt=one_month_ago
         )
 
         count = inactive_users.count()
@@ -64,8 +64,8 @@ def block_inactive_users():
             logger.info(f"Inactive users: {count}")
             return f"Inactive users: {count}"
         else:
-            logger.error(f"No active users")
-            return f"No active users"
+            logger.error("No active users")
+            return "No active users"
     except Exception as e:
         logger.error(f"Error sending notifications: {str(e)}")
         return f"Error: {str(e)}"

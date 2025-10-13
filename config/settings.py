@@ -30,8 +30,8 @@ INSTALLED_APPS = [
     "course",
     "django_filters",
     "rest_framework_simplejwt",
-    'drf_spectacular',
-    'django_celery_beat',
+    "drf_spectacular",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -70,7 +70,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",  # По умолчанию все эндпоинты закрыты
     ),
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 DATABASES = {
@@ -157,16 +157,16 @@ SIMPLE_JWT = {
 }
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
     },
 }
 
@@ -175,7 +175,6 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API для системы управления обучением (LMS)",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-
     # Автоматическая генерация тегов из URL
     "TAGS": [
         {"name": "courses", "description": "Операции с курсами"},
@@ -184,7 +183,6 @@ SPECTACULAR_SETTINGS = {
         {"name": "payments", "description": "Операции с платежами"},
         {"name": "auth", "description": "Аутентификация и авторизация"},
     ],
-
     # Поддержка JWT
     "SECURITY": [{"Bearer": []}],
     "SECURITY_SCHEMES": {
@@ -194,21 +192,21 @@ SPECTACULAR_SETTINGS = {
             "bearerFormat": "JWT",
         }
     },
-
     # Автоматическая сортировка операций
     "SORT_OPERATIONS": False,
-
     # Красивые имена в схеме
     "COMPONENT_SPLIT_REQUEST": True,
 }
 
-STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
-STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY', '')
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
+STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY", "")
 
 # Настройки для Celery
 
 # URL-адрес брокера сообщений
-CELERY_BROKER_URL = REDIS_URL  # Например, Redis, который по умолчанию работает на порту 6379
+CELERY_BROKER_URL = (
+    REDIS_URL  # Например, Redis, который по умолчанию работает на порту 6379
+)
 
 # URL-адрес брокера результатов, также Redis
 CELERY_RESULT_BACKEND = REDIS_URL
@@ -223,20 +221,20 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
 # Настройки для Celery
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 CELERY_BEAT_SCHEDULE = {
-    'debug-task-every-10-minutes': {
-        'task': 'users.tasks.debug_task',
-        'schedule': timedelta(minutes=10),
+    "debug-task-every-10-minutes": {
+        "task": "users.tasks.debug_task",
+        "schedule": timedelta(minutes=10),
     },
-    'block-inactive-users-every-day': {
-        'task': 'users.tasks.block_inactive_users',
-        'schedule': timedelta(days=1),  # запускаем проверку каждый день
+    "block-inactive-users-every-day": {
+        "task": "users.tasks.block_inactive_users",
+        "schedule": timedelta(days=1),  # запускаем проверку каждый день
     },
 }
 
-REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@lms-platform.ru'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "noreply@lms-platform.ru"
