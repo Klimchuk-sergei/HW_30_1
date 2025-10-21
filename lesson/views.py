@@ -11,6 +11,7 @@ from .paginators import LessonPaginator
 from users.permissions import IsModerator, IsOwner, IsOwnerAndNotModerator
 from lesson.models import Lesson
 from lesson.serializers import LessonSerializer
+from users.tasks import send_course_update_email
 
 
 class LessonListAPIView(ListAPIView):
@@ -49,9 +50,17 @@ class LessonUpdateAPIView(UpdateAPIView):
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsOwner | IsModerator]
 
+    def perform_update(self, serializer):
+        instance = serializer.save()
+
+        # При обновлении уроков, отправляем уведомление об обновлениикурса
+        send_course_update_email.delay(instance.course.id)
+        print(f"Update notification sent for course: {instance.course.title}")
+
 
 class LessonDestroyAPIView(DestroyAPIView):
     queryset = Lesson.objects.all()
     permission_classes = [IsOwnerAndNotModerator]  # Только владелец и не модератор
+
     def get_queryset(self):
         return Lesson.objects.filter(owner=self.request.user)

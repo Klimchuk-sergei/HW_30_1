@@ -1,7 +1,4 @@
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
-from rest_framework import serializers
-import re
 
 
 def validate_youtube_only(value):

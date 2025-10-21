@@ -1,7 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from .paginators import CoursePaginator
 from .models import Course, Subscription
 from django.shortcuts import get_object_or_404
@@ -10,6 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from users.permissions import IsModerator, IsOwner
 from drf_spectacular.utils import extend_schema
+from users.tasks import send_course_update_email
 
 
 class CourseViewSet(ModelViewSet):
@@ -48,6 +48,12 @@ class CourseViewSet(ModelViewSet):
                     owner=self.request.user
                 )  # Обычные пользователи - только свои
         return Course.objects.none()
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+
+        send_course_update_email.delay(instance.id)
+        print(f"Update notification sent for course: {instance.title}")
 
 
 class SubscriptionAPIView(APIView):
