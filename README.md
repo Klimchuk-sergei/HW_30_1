@@ -173,16 +173,20 @@
 
 ### Примеры запросов через Postman:
 
-### 1.  **Регистрация пользователя**
-    POST http://127.0.0.1:8000/users/register/
+### 1.  Регистрация пользователя
+POST http://127.0.0.1:8000/users/register/
     Content-Type: application/json
-    
-    {
+```json
+{
         "email": "test@example.com",
         "password": "securepassword123",
         "phone_number": "+79991234567",
         "city": "Москва"
     }
+```
+    
+    
+    
 
 ### 2.  **Авторизация и получение токена**
     POST http://127.0.0.1:8000/users/login/

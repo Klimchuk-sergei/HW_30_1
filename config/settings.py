@@ -224,10 +224,10 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 CELERY_BEAT_SCHEDULE = {
-    "debug-task-every-10-minutes": {
-        "task": "users.tasks.debug_task",
-        "schedule": timedelta(minutes=10),
-    },
+    # "debug-task-every-10-minutes": {
+    #     "task": "users.tasks.debug_task",
+    #     "schedule": timedelta(minutes=10),
+    # },
     "block-inactive-users-every-day": {
         "task": "users.tasks.block_inactive_users",
         "schedule": timedelta(days=1),  # запускаем проверку каждый день
