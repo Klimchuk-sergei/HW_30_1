@@ -18,8 +18,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копируем проект
 COPY . .
 
+# Создаем директории для статики
+RUN mkdir -p static media
+
 # Открываем порт контейнера
 EXPOSE 8000
-
-# Команда для запуска
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
