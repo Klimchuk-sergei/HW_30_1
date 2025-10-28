@@ -96,10 +96,6 @@ class LessonTestCase(APITestCase):
         """Тест удаления урока владельцем"""
         self.client.force_authenticate(user=self.user)
 
-        # print(f"🔍 User: {self.user.email}")
-        # print(f"🔍 Lesson owner: {self.lesson.owner.email}")
-        # print(f"🔍 Is owner: {self.lesson.owner == self.user}")
-
         response = self.client.delete(
             reverse("lesson:lesson-delete", kwargs={"pk": self.lesson.id})
         )
