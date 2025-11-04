@@ -1,0 +1,19 @@
+[flake8]
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    env,
+    .env,
+    migrations,
+    media,
+    static,
+    .github,
+    htmlcov,
+    .coverage
+max-line-length = 120
+ignore =
+    W503,
+    E501,
+    F401

@@ -1,0 +1,28 @@
+[run]
+source = .
+omit =
+    */tests/*
+    */migrations/*
+    */__pycache__/*
+    */venv/*
+    */.virtualenvs/*
+    manage.py
+    */admin.py
+    */apps.py
+    */asgi.py
+    */wsgi.py
+    */management/commands/*
+    config/settings.py
+    config/urls.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __str__
+    raise NotImplementedError
+    if self.debug:
+    if settings.DEBUG
+    if __name__ == .__main__.:
+    class .*Serializer
+    logger\.
+    print\(
