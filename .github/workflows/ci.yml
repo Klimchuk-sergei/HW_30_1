@@ -65,7 +65,7 @@ jobs:
         run: |
           python manage.py migrate
         env:
-          DB_NAME: github_actions
+          DB_NAME: test_db
           DB_USER: postgres
           DB_PASSWORD: postgres
           DB_HOST: localhost
@@ -78,7 +78,7 @@ jobs:
         run: |
           python manage.py test
         env:
-          DB_NAME: github_actions
+          DB_NAME: test_db
           DB_USER: postgres
           DB_PASSWORD: postgres
           DB_HOST: localhost
