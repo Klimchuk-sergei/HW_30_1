@@ -16,9 +16,9 @@ services:
   db:
     image: postgres:15
     environment:
-      POSTGRES_DB: HW_30
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 2000
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -28,24 +28,23 @@ services:
     restart: unless-stopped
 
   web:
-    build: .
+    image: klimwork/myapp:${TAG:-latest}
     env_file:
       - .env
-    command: sh -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
     volumes:
       - static_volume:/app/static
       - media_volume:/app/media
     expose:
       - "8000"
     environment:
-      - DB_NAME=HW_30
-      - DB_USER=postgres
-      - DB_PASSWORD=2000
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=db
       - DB_PORT=5432
-      - SECRET_KEY=django-insecure-test-key-123
-      - DEBUG=True
-      - ALLOWED_HOSTS=*
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - REDIS_URL=redis://redis:6379/0
     depends_on:
       - db
@@ -53,19 +52,19 @@ services:
     restart: unless-stopped
 
   celery:
-    build: .
+    image: klimwork/myapp:${TAG:-latest}
     env_file:
       - .env
     command: celery -A config worker --loglevel=info
     environment:
-      - DB_NAME=HW_30
-      - DB_USER=postgres
-      - DB_PASSWORD=2000
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=db
       - DB_PORT=5432
-      - SECRET_KEY=django-insecure-test-key-123
-      - DEBUG=True
-      - ALLOWED_HOSTS=*
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - REDIS_URL=redis://redis:6379/0
     depends_on:
       - db
@@ -73,19 +72,19 @@ services:
     restart: unless-stopped
 
   celery-beat:
-    build: .
+    image: klimwork/myapp:${TAG:-latest}
     env_file:
       - .env
     command: celery -A config beat --loglevel=info
     environment:
-      - DB_NAME=HW_30
-      - DB_USER=postgres
-      - DB_PASSWORD=2000
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=db
       - DB_PORT=5432
-      - SECRET_KEY=django-insecure-test-key-123
-      - DEBUG=True
-      - ALLOWED_HOSTS=*
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - REDIS_URL=redis://redis:6379/0
     depends_on:
       - db

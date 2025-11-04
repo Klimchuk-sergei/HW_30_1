@@ -1,27 +1,97 @@
-FROM python:3.12-slim
+version: '3.9'
 
-# Устанавливаем системные зависимости
-RUN apt-get update && apt-get install -y \
-    gcc \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/app/static
+      - media_volume:/app/media
+    depends_on:
+      - web
+    restart: unless-stopped
 
-# Создаем рабочую директорию
-WORKDIR /app
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
-# Копируем зависимости
-COPY requirements.txt .
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
 
-# Устанавливаем зависимости
-RUN pip install --no-cache-dir -r requirements.txt
+  web:
+    image: klimwork/myapp:${TAG:-latest}
+    env_file:
+      - .env
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    expose:
+      - "8000"
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
 
-# Копируем проект
-COPY . .
+  celery:
+    image: klimwork/myapp:${TAG:-latest}
+    env_file:
+      - .env
+    command: celery -A config worker --loglevel=info
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
 
-# Создаем директории для статики
-RUN mkdir -p static media
+  celery-beat:
+    image: klimwork/myapp:${TAG:-latest}
+    env_file:
+      - .env
+    command: celery -A config beat --loglevel=info
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
 
-# Открываем порт контейнера
-EXPOSE 8000
-
-CMD ["sh", "-c", "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"]
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
