@@ -61,19 +61,32 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run migration
-        run: python manage.py migrate
+      - name: Run migrations
+        run: |
+          python manage.py migrate
         env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+          DB_NAME: github_actions
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_PORT: 5432
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: 'False'
+          ALLOWED_HOSTS: localhost,127.0.0.1
 
       - name: Run tests
-        run: python manage.py test
+        run: |
+          python manage.py test
         env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+          DB_NAME: github_actions
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_PORT: 5432
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: 'False'
+          ALLOWED_HOSTS: localhost,127.0.0.1
+          REDIS_URL: redis://localhost:6379/0
 
   build:
     runs-on: ubuntu-latest
