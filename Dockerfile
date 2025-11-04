@@ -14,7 +14,7 @@ COPY . .
 
 RUN mkdir -p static media
 
-RUN python manage.py collectstatic --noinput
+RUN SECRET_KEY=temp-key-for-build DEBUG=False ALLOWED_HOSTS=localhost python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
