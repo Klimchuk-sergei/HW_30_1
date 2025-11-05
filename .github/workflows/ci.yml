@@ -113,7 +113,11 @@ jobs:
         run: docker build -f Dockerfile -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
 
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          # Добавляем latest тег
+          docker tag ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
 
   deploy:
     runs-on: ubuntu-latest
