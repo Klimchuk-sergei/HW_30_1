@@ -133,8 +133,14 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ${{ secrets.DEPLOY_DIR }}
+            echo "Pulling latest Docker image..."
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+            echo "Stopping old containers..."
+            docker-compose down
+            echo "Updating docker-compose with new image..."
+            export TAG=${{ github.sha }}
+            docker-compose up -d
+            echo "Cleaning up old images..."
+            docker image prune -f
           EOF
