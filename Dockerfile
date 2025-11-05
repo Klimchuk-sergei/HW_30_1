@@ -16,4 +16,4 @@ RUN mkdir -p static media
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"]
+CMD sh -c "python manage.py migrate && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"
