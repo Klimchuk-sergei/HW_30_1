@@ -1,6 +1,19 @@
 [flake8]
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    env,
+    .env,
+    migrations,
+    media,
+    static,
+    .github,
+    htmlcov,
+    .coverage
 max-line-length = 120
-ignore = E203, W503
-exclude = .git,__pycache__,build,dist
-per-file-ignores =
-    __init__.py:F401
+ignore =
+    W503,
+    E501,
+    F401
